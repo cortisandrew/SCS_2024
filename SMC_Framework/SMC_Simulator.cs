@@ -66,8 +66,9 @@ namespace SMC_Framework
 
             return result / (n - 1);
 
-            double result = _simulationResults.Sum(x => (x - estimatedMean) * (x - estimatedMean));
-            return result / (_simulationResults.Count - 1);
+            // Same as above, but implemented using LinQ
+            //double result = _simulationResults.Sum(x => (x - estimatedMean) * (x - estimatedMean));
+            //return result / (_simulationResults.Count - 1);
         }
 
         public double GetRMSE()
