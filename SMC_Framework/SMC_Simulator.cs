@@ -38,12 +38,50 @@ namespace SMC_Framework
             }
         }
 
+        /// <summary>
+        /// Return mu hat (the estimate of the actual mean)
+        /// </summary>
+        /// <returns></returns>
         public double GetExpectedValue()
         {
             return _simulationResults.Average();
         }
 
+        /// <summary>
+        /// Estimates the variance of the simulation based on the Monte Carlo Results
+        /// This estimate is unbiased
+        /// </summary>
+        /// <returns></returns>
+        public double GetEstimatedVariance()
+        {
+            double estimatedMean = GetExpectedValue();
 
+            int n = _simulationResults.Count;
+            double result = 0;
 
+            for (int i = 0; i < _simulationResults.Count;i++)
+            {
+                result += Math.Pow(_simulationResults[i] - estimatedMean, 2.0);
+            }
+
+            return result / (n - 1);
+
+            double result = _simulationResults.Sum(x => (x - estimatedMean) * (x - estimatedMean));
+            return result / (_simulationResults.Count - 1);
+        }
+
+        public double GetRMSE()
+        {
+            // sigma = sqrt( sigma squared )
+            double standardDeviation = Math.Sqrt(GetEstimatedVariance());
+            double n = _simulationResults.Count;
+            return standardDeviation / Math.Sqrt(n);
+        }
+
+        public int FindNumberOfSimulationsToGetRMSE(double RMSE)
+        {
+            double sigmaSquared = GetEstimatedVariance();
+            return (int)Math.Ceiling(sigmaSquared / Math.Pow(RMSE, 2.0));
+        }
     }
 }
